@@ -19,10 +19,12 @@ class Program {
 
         void addLoadLiteral(int value, int op1);
 
-        void addLoadAddress(int op1, std::string label);
+        void addLoadAddress(std::string label, int op1);
 
         void addLabel(std::string label_name);
+
         void addLiteralValue(int value);
+
         void addLiteralString(std::string str);
 
 };

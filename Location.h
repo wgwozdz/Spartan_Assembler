@@ -2,14 +2,21 @@
 #define LOCATION_H
 
 #include <string>
+#include <vector>
 
 class Location {
     std::string ins;
     int value;
+    bool isLabelLoad;
+    bool isUpper;
+    std::string labelName;
 
     public:
-        Location(std::string str);
+        Location(std::string str); // Deprecated.
+
         Location(int val);
+
+        Location(int upperHalf, std::string label, bool upper); // Should be a subclass.
 
         std::string toBinaryString(std::map<std::string, int> labels);
 };

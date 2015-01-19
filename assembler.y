@@ -52,7 +52,7 @@ instruction:
     | NEG REGISTER ',' REGISTER              { program.addInstruction(I_MORE, I_NEG, $2, $4); }
 
     | LDL INTEGER ',' REGISTER               { program.addLoadLiteral($2, $4); }
-    | LDL IDENTIFIER ',' REGISTER            { program.addInstruction(Location(string_format("%d Address of %s -> r%d", count, $2, $4))); count += 2; }
+    | LDL IDENTIFIER ',' REGISTER            { program.addLoadAddress($2, $4); }
     | MOV REGISTER ',' REGISTER              { program.addInstruction(I_MORE, I_MOV, $2, $4); }
 
     | PUSH REGISTER ',' REGISTER             { program.addInstruction(I_MORE, I_STI, $2, $4); } /* TODO: make processor have this ordering */
@@ -94,9 +94,6 @@ void yyerror(char *s) {
 
 int main(int argc, char **args) {
     yyparse();
-    if (argc > 0) {
-        printf("%s\n", args[1]);
-    }
     std::cout << program.toBinaryString();
     return 0;
 }

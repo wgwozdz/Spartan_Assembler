@@ -1,7 +1,6 @@
 #include <vector>
 #include <map>
 #include <sstream>
-#include <stdio.h>
 #include "Program.h"
 #include "Location.h"
 
@@ -13,9 +12,8 @@ void verifyOperand(int op) {
     }
 }
 
-vector<unsigned char> intToBytes(int paramInt)
-{
-     vector<unsigned char> arrayOfByte(4);
+std::vector<unsigned char> intToBytes(int paramInt) {
+     std::vector<unsigned char> arrayOfByte(4);
      for (int i = 0; i < 4; i++)
          arrayOfByte[3 - i] = (paramInt >> (i * 8));
      return arrayOfByte;
@@ -52,10 +50,14 @@ void Program::addLoadLiteral(int value, int op1) {
     verifyOperand(op1);
     vector<unsigned char> bytes = intToBytes(value);
 
-    printf("Got literal %d %d %d %d", bytes[3], bytes[2], bytes[1], bytes[0]);
-
     addInstruction(I_LDU, op1, bytes[2] / 16, bytes[2] % 16);
     addInstruction(I_LDL, op1, bytes[3] / 16, bytes[3] % 16);
+}
+
+void Program::addLoadAddress(std::string label, int op1) {
+    verifyOperand(op1);
+    locations.push_back(Location((16 * I_LDU) + op1, label, true));
+    locations.push_back(Location((16 * I_LDL) + op1, label, false));
 }
 
 void Program::addLabel(string label_name) {
