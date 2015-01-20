@@ -69,7 +69,57 @@ void Program::addLiteralValue(int value) {
 }
 
 void Program::addLiteralString(std::string str) {
-
+    bool escaped = false;
+    for (int i = 1; i < str.length() - 1; i++) {
+        char c = str[i];
+        if (!escaped && c == '\\') {
+            escaped = true;
+        } else if (escaped) {
+            escaped = false;
+            switch (c) {
+                case '0':
+                    locations.push_back(Location('\0'));
+                break;
+                case '\'':
+                    locations.push_back(Location('\''));
+                break;
+                case '\"':
+                    locations.push_back(Location('\"'));
+                break;
+                case '?':
+                    locations.push_back(Location('?'));
+                break;
+                case '\\':
+                    locations.push_back(Location('\\'));
+                break;
+                case 'a':
+                    locations.push_back(Location('\a'));
+                break;
+                case 'b':
+                    locations.push_back(Location('\b'));
+                break;
+                case 'f':
+                    locations.push_back(Location('\f'));
+                break;
+                case 'n':
+                    locations.push_back(Location('\n'));
+                break;
+                case 'r':
+                    locations.push_back(Location('\r'));
+                break;
+                case 't':
+                    locations.push_back(Location('\t'));
+                break;
+                case 'v':
+                    locations.push_back(Location('\v'));
+                break;
+            }
+        } else {
+            escaped = false;
+            locations.push_back(Location(c));
+        }
+    }
+    locations.push_back(Location('\0'));
 }
 
 

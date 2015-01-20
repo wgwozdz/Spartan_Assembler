@@ -39,8 +39,8 @@ program:
 instruction:
       ADD REGISTER ',' REGISTER ',' REGISTER { program.addInstruction(I_ADD, $2, $4, $6); }               // $2 + $4 -> $6
     | SUB REGISTER ',' REGISTER ',' REGISTER { program.addInstruction(I_SUB, $2, $4, $6); }               // $2 - $4 -> $6
-    | INC REGISTER                           { program.addInstruction(I_MORE, I_MORE, I_INC, $2); }       // $2 + 1 -> $4
-    | DEC REGISTER                           { program.addInstruction(I_MORE, I_MORE, I_DEC, $2); }       // $2  $4 -> $6
+    | INC REGISTER                           { program.addInstruction(I_MORE, I_MORE, I_INC, $2); }       // $2++
+    | DEC REGISTER                           { program.addInstruction(I_MORE, I_MORE, I_DEC, $2); }       // $2--
     | MUL REGISTER ',' REGISTER ',' REGISTER { program.addInstruction(I_MUL, $2, $4, $6); }
     | DIV REGISTER ',' REGISTER ',' REGISTER { program.addInstruction(I_DIV, $2, $4, $6); }
     | MOD REGISTER ',' REGISTER ',' REGISTER { program.addInstruction(I_MOD, $2, $4, $6); }
@@ -82,8 +82,8 @@ label:
     ;
 
 literal:
-    INTEGER                                  { program.addLiteralValue($1); count++; }
-    | STRING                                 { program.addInstruction(Location(string_format("%d string literal %s", count, $1))); count += strlen($1) + 1 } /* TODO: de-escape characters and use len */
+      INTEGER                                { program.addLiteralValue($1); }
+    | STRING                                 { program.addLiteralString($1); } /* TODO: de-escape characters and use len */
     ;
 
 %%
