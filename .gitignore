@@ -98,7 +98,7 @@ ipcore_dir/*
 *.wdb
 .idea/*
 *.tab.*
-*.yy.c
+*.yy.c*
 *.iml
 code/*
 assembler

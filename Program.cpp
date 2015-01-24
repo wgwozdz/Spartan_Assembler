@@ -1,40 +1,41 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <string>
 #include "Program.h"
 #include "Location.h"
+#include "util.h"
 
 using namespace std;
 
-void verifyOperand(int op) {
-    if (op < 0 || op > 15) {
-        throw overflow_error("Bad operand");
-    }
-}
-
-std::vector<unsigned char> intToBytes(int paramInt) {
-     std::vector<unsigned char> arrayOfByte(4);
-     for (int i = 0; i < 4; i++)
-         arrayOfByte[3 - i] = (paramInt >> (i * 8));
-     return arrayOfByte;
-}
-
 Program::Program() {
 
+}
+
+void Program::start() {
+    char handler_label[100];
+    for (int i = 0; i < 16; i++) {
+        sprintf(handler_label, "interrupthandler%02d", i);
+        locations.push_back(new LiteralLabel(string(handler_label)));
+    }
+    addLoadAddress("main", 0);
+    addInstruction(I_MORE, I_JMP, J_A, 0);
+    locations.push_back(new Location(0));
+}
+
+void Program::finish() {
+    locations.push_back(new Location(0));
+    addLabel("_stackstart");
 }
 
 std::string Program::toBinaryString() {
     stringstream str;
 
     for (int i = 0; i < locations.size(); i++) {
-        str << i << " " << locations[i].toBinaryString(labels) << "\n";
+        str << i << " " << locations[i]->toBinaryString(labels) << "\n";
     }
 
     return str.str();
-}
-
-void Program::addInstruction(Location i) {
-    locations.push_back(i);
 }
 
 void Program::addInstruction(int op1, int op2, int op3, int op4) {
@@ -43,7 +44,7 @@ void Program::addInstruction(int op1, int op2, int op3, int op4) {
     verifyOperand(op3);
     verifyOperand(op4);
 
-    locations.push_back(Location ((op1*16*16*16) + (op2*16*16) + (op3*16) + (op4)));
+    locations.push_back(new Location((op1*16*16*16) + (op2*16*16) + (op3*16) + (op4)));
 }
 
 void Program::addLoadLiteral(int value, int op1) {
@@ -56,8 +57,8 @@ void Program::addLoadLiteral(int value, int op1) {
 
 void Program::addLoadAddress(std::string label, int op1) {
     verifyOperand(op1);
-    locations.push_back(Location((16 * I_LDU) + op1, label, true));
-    locations.push_back(Location((16 * I_LDL) + op1, label, false));
+    locations.push_back(new UpperLoadAddr(label, I_LDU, op1));
+    locations.push_back(new LowerLoadAddr(label, I_LDU, op1));
 }
 
 void Program::addLabel(string label_name) {
@@ -65,7 +66,7 @@ void Program::addLabel(string label_name) {
 }
 
 void Program::addLiteralValue(int value) {
-    locations.push_back(Location(value));
+    locations.push_back(new Location(value));
 }
 
 void Program::addLiteralString(std::string str) {
@@ -76,50 +77,13 @@ void Program::addLiteralString(std::string str) {
             escaped = true;
         } else if (escaped) {
             escaped = false;
-            switch (c) {
-                case '0':
-                    locations.push_back(Location('\0'));
-                break;
-                case '\'':
-                    locations.push_back(Location('\''));
-                break;
-                case '\"':
-                    locations.push_back(Location('\"'));
-                break;
-                case '?':
-                    locations.push_back(Location('?'));
-                break;
-                case '\\':
-                    locations.push_back(Location('\\'));
-                break;
-                case 'a':
-                    locations.push_back(Location('\a'));
-                break;
-                case 'b':
-                    locations.push_back(Location('\b'));
-                break;
-                case 'f':
-                    locations.push_back(Location('\f'));
-                break;
-                case 'n':
-                    locations.push_back(Location('\n'));
-                break;
-                case 'r':
-                    locations.push_back(Location('\r'));
-                break;
-                case 't':
-                    locations.push_back(Location('\t'));
-                break;
-                case 'v':
-                    locations.push_back(Location('\v'));
-                break;
-            }
+            locations.push_back(new Location(getEscapedChar(c)));
         } else {
             escaped = false;
-            locations.push_back(Location(c));
+            locations.push_back(new Location(c));
         }
     }
-    locations.push_back(Location('\0'));
+    locations.push_back(new Location('\0'));
 }
 
 

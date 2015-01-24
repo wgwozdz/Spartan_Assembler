@@ -5,7 +5,7 @@
 #include "Location.h"
 
 class Program {
-    std::vector<Location> locations;
+    std::vector<Location *> locations;
     std::map<std::string, int> labels;
 
     public:
@@ -13,7 +13,8 @@ class Program {
 
         std::string toBinaryString();
 
-        void addInstruction(Location i); //Deprecated.
+        void start();
+        void finish();
 
         void addInstruction(int op1, int op2, int op3, int op4);
 

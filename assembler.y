@@ -8,6 +8,7 @@
     #include <iomanip>
     #include "Program.h"
     #include "Location.h"
+    #include "util.h"
     int yylex(void);
     void yyerror(char *);
     Program program;
@@ -93,7 +94,9 @@ void yyerror(char *s) {
 }
 
 int main(int argc, char **args) {
+    program.start();
     yyparse();
+    program.finish();
     std::cout << program.toBinaryString();
     return 0;
 }

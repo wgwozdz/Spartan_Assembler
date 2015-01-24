@@ -3,21 +3,12 @@
 #include <vector>
 #include <map>
 #include "Location.h"
+#include "util.h"
 
 using namespace std;
 
-Location::Location(string str) {
-    ins = str;
+Location::Location() {
     value = -1;
-    isUpper = false;
-    isLabelLoad = false;
-}
-
-std::vector<unsigned char> intToByteV(int paramInt) {
-     std::vector<unsigned char> arrayOfByte(4);
-     for (int i = 0; i < 4; i++)
-         arrayOfByte[3 - i] = (paramInt >> (i * 8));
-     return arrayOfByte;
 }
 
 Location::Location(int val) {
@@ -28,27 +19,35 @@ Location::Location(int val) {
         throw overflow_error ("Value is larger than a location");
     }
     value = val;
-    isUpper = false;
-    isLabelLoad = false;
-}
-
-Location::Location(int upperHalf, std::string label, bool upper) {
-    value = upperHalf;
-    labelName = label;
-    isUpper = upper;
-    isLabelLoad = true;
 }
 
 string Location::toBinaryString(std::map<std::string, int> labels) {
-    if (isLabelLoad) {
-        vector<unsigned char> bytes = intToByteV(labels[labelName]);
-        if (isUpper) {
-            return std::bitset<16>((value << 8) + bytes[2]).to_string();
-        }
-        return std::bitset<16>((value << 8) + bytes[3]).to_string();
-    }
-    if (value != -1) {
-        return std::bitset<16>(value).to_string();
-    }
-    return ins;
+    return std::bitset<16>(value).to_string();
+}
+
+UpperLoadAddr::UpperLoadAddr(std::string label, int op1, int op2) {
+    this->op1 = op1;
+    this->op2 = op2;
+    this->label = label;
+}
+
+string UpperLoadAddr::toBinaryString(std::map<std::string, int> labels) {
+    vector<unsigned char> bytes = intToBytes(labels[label]);
+    return std::bitset<16>((op1 << 12) + (op2 << 8) + (bytes[2])).to_string();
+}
+
+LowerLoadAddr::LowerLoadAddr(std::string label, int op1, int op2) : UpperLoadAddr(label, op1, op2) { }
+
+string LowerLoadAddr::toBinaryString(std::map<std::string, int> labels) {
+    vector<unsigned char> bytes = intToBytes(labels[label]);
+    return std::bitset<16>((op1 << 12) + (op2 << 8) + (bytes[3])).to_string();
+}
+
+LiteralLabel::LiteralLabel(std::string label) {
+    this->label = label;
+}
+
+string LiteralLabel::toBinaryString(std::map<std::string, int> labels) {
+    int value = labels.count(label) > 0 ? labels[label] : 0;
+    return std::bitset<16>(value).to_string();
 }
