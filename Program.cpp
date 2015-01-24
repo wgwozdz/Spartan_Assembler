@@ -32,7 +32,7 @@ std::string Program::toBinaryString() {
     stringstream str;
 
     for (int i = 0; i < locations.size(); i++) {
-        str << i << " " << locations[i]->toBinaryString(labels) << "\n";
+        str << "assign mem[" << i << "] = 16'b" << locations[i]->toBinaryString(labels) << ";\n";
     }
 
     return str.str();
