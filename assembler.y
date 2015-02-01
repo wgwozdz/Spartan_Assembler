@@ -12,9 +12,6 @@
     int yylex(void);
     void yyerror(char *);
     Program program;
-
-    //TODO: remove.
-    int count = 0;
 %}
 
 %union {
