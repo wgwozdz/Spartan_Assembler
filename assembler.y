@@ -8,7 +8,7 @@
     #include <iomanip>
     #include "Program.h"
     #include "Location.h"
-    #include "util.h"
+    #include "Util.h"
     int yylex(void);
     void yyerror(char *);
     Program program;
@@ -56,19 +56,19 @@ instruction:
     | LDL IDENTIFIER ',' REGISTER            { program.addLoadAddress($2, $4); }
     | MOV REGISTER ',' REGISTER              { program.addInstruction(I_MORE, I_MOV, $2, $4); }
 
-    | PUSH REGISTER ',' REGISTER             { program.addInstruction(I_MORE, I_STI, $2, $4); } /* TODO: make processor have this ordering */
-    | POP REGISTER ',' REGISTER              { program.addInstruction(I_MORE, I_DLD, $2, $4); } /* TODO: make processor have this ordering */
-    | STM REGISTER ',' REGISTER              { program.addInstruction(I_MORE, I_STM, $2, $4); } /* TODO: make processor have this ordering */
-    | LDM REGISTER ',' REGISTER              { program.addInstruction(I_MORE, I_LDM, $2, $4); } /* TODO: make processor have this ordering */
+    | PUSH REGISTER ',' REGISTER             { program.addInstruction(I_MORE, I_STI, $2, $4); }
+    | POP REGISTER ',' REGISTER              { program.addInstruction(I_MORE, I_DLD, $2, $4); }
+    | STM REGISTER ',' REGISTER              { program.addInstruction(I_MORE, I_STM, $2, $4); }
+    | LDM REGISTER ',' REGISTER              { program.addInstruction(I_MORE, I_LDM, $2, $4); }
 
-    | IN DEVICE ',' REGISTER                 { program.addInstruction(I_MORE, I_IOI, $2, $4); } /* TODO: make processor have this ordering */
-    | OUT REGISTER ',' DEVICE                { program.addInstruction(I_MORE, I_IOO, $2, $4); } /* TODO: make processor have this ordering */
+    | IN DEVICE ',' REGISTER                 { program.addInstruction(I_MORE, I_IOI, $2, $4); }
+    | OUT REGISTER ',' DEVICE                { program.addInstruction(I_MORE, I_IOO, $2, $4); }
 
     | GETF REGISTER                          { program.addInstruction(I_MORE, I_MORE, I_GTF, $2); }
     | SETF REGISTER                          { program.addInstruction(I_MORE, I_MORE, I_STF, $2); }
     | CMP REGISTER ',' REGISTER              { program.addInstruction(I_MORE, I_CMP, $2, $4); }
 
-    | CAL REGISTER ',' REGISTER              { program.addInstruction(I_MORE, I_CAL, $2, $4); } /* TODO: make processor have this ordering */
+    | CAL REGISTER ',' REGISTER              { program.addInstruction(I_MORE, I_CAL, $2, $4); }
     | JUMP_ALWAYS REGISTER                   { program.addInstruction(I_MORE, I_JMP, J_A,  $2); }
     | JUMP_GREATER REGISTER                  { program.addInstruction(I_MORE, I_JMP, J_GT, $2); }
     | JUMP_LESS REGISTER                     { program.addInstruction(I_MORE, I_JMP, J_LT, $2); }
