@@ -1,4 +1,4 @@
-assember: assembler.tab.cpp assembler.tab.h lex.yy.cpp Program.cpp Location.cpp util.cpp Program.h Location.h util.h
+assember: assembler.tab.cpp assembler.tab.h lex.yy.cpp Program.cpp Location.cpp Util.cpp Program.h Location.h Util.h
 	clang++ -std=c++11 -stdlib=libc++ -Wno-write-strings assembler.tab.cpp lex.yy.cpp Program.cpp Location.cpp Util.cpp -o assembler
 
 assembler.tab.cpp: assembler.y
