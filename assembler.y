@@ -81,7 +81,7 @@ label:
 
 literal:
       INTEGER                                { program.addLiteralValue($1); }
-    | STRING                                 { program.addLiteralString($1); } /* TODO: de-escape characters and use len */
+    | STRING                                 { program.addLiteralString($1); }
     ;
 
 %%
