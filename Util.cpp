@@ -42,6 +42,6 @@ std::vector<unsigned char> intToBytes(int paramInt) {
 
 void verifyOperand(int op) {
     if (op < 0 || op > 15) {
-        throw overflow_error("Bad operand");
+      // throw overflow_error("Bad operand");
     }
 }
