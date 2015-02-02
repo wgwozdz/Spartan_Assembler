@@ -1,0 +1,71 @@
+// Calling convention:
+// r15 is the stack pointer: must be valid and will be returned the same.
+// r14 is the base pointer: will be returned the same.
+// r13 is the return address: will be returned the same.
+// r4-r12 are saved registers: will be returned the same.
+// r0-r3 are argument registers: may be blown away.
+// r0 is the return value.
+
+// the lower 8 bits of r0 are written to the leds. their previous value is returned.
+write_leds:
+	in d0, r1
+	out r0, d0
+	mov r1, r0
+	ja r13
+
+// the string pointed to by r0 is written to the lcd. the whole lcd is overwritten.
+write_str:
+	push r13, r15
+	push r0, r15
+	ldl write_str_body, r13
+	ldl blank_screen, r0
+	cal r13, r13
+	pop r15, r0
+	cal r13, r13
+	pop r15, r13
+	ja r13
+
+write_str_body:
+	push r4, r15
+	push r5, r15
+	push r6, r15
+	push r7, r15
+	ldl write_str_loop, r4
+	ldl write_str_ret, r5
+	ldl 0, r3 // '\0'
+	ldl 0, r2 // lcd index
+	ldl 256, r6 // add one to upper byte
+
+	write_str_loop:
+		ldm r0, r1
+		cmp r1, r3
+		je r5  // if c == null, return.
+		inc r0
+		add r2, r1, r7
+		out r7, d1
+		add r2, r6, r2
+		ja r4
+
+write_str_ret:
+	pop r15, r7
+	pop r15, r6
+	pop r15, r5
+	pop r15, r4
+	ja r13
+
+blank_screen:
+	"				 "
+
+// a test main function. check leds and lcd.
+main:
+	ldl 255, r0
+	ldl write_leds, r13
+	cal r13, r13
+	ldl hello_world, r0
+	ldl write_str, r13
+	cal r13, r13
+	0 // halt
+
+hello_world:
+	"Hello, World!"
+	

@@ -3,6 +3,7 @@
   void yyerror(char *);
   #include "Assembler.tab.h"
 %}
+%option yylineno
 
 %%
 
@@ -64,5 +65,9 @@ d[0-9]+ { yylval.iVal = atoi(yytext+1); return DEVICE; }
 
 int yywrap(void) {
   return 1;
+}
+
+void yyerror(char *s) {
+    fprintf(stderr, "line %d: %s\n", yylineno, s);
 }
 

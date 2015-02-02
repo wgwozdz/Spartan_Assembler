@@ -86,10 +86,6 @@ literal:
 
 %%
 
-void yyerror(char *s) {
-  fprintf(stderr, "%s\n", s);
-}
-
 int main(int argc, char **args) {
     program.start();
     yyparse();
