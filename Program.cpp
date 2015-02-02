@@ -18,6 +18,7 @@ void Program::start() {
         sprintf(handler_label, "interrupthandler%02d", i);
         locations.push_back(new LiteralLabel(string(handler_label)));
     }
+    addLoadAddress("_stackstart", 15);
     addLoadAddress("main", 0);
     addInstruction(I_MORE, I_JMP, J_A, 0);
     locations.push_back(new Location(0));
