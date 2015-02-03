@@ -59,7 +59,7 @@ enum Jump {
     J_NE  = 6,
     J_GE  = 5,
     J_LE  = 3,
-    J_A   = 7
+    J_A   = 15
 };
 
 #endif

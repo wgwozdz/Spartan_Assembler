@@ -33,7 +33,7 @@ std::string Program::toBinaryString() {
     stringstream str;
 
     for (int i = 0; i < locations.size(); i++) {
-        str << "assign mem[" << i << "] = 16'b" << locations[i]->toBinaryString(labels) << ";\n";
+        str << "mem[" << i << "] = 16'b" << locations[i]->toBinaryString(labels) << ";\n";
     }
 
     return str.str();
@@ -59,7 +59,7 @@ void Program::addLoadLiteral(int value, int op1) {
 void Program::addLoadAddress(std::string label, int op1) {
     verifyOperand(op1);
     locations.push_back(new UpperLoadAddr(label, I_LDU, op1));
-    locations.push_back(new LowerLoadAddr(label, I_LDU, op1));
+    locations.push_back(new LowerLoadAddr(label, I_LDL, op1));
 }
 
 void Program::addLabel(string label_name) {

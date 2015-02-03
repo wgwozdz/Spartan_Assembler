@@ -69,5 +69,6 @@ int yywrap(void) {
 
 void yyerror(char *s) {
     fprintf(stderr, "line %d: %s\n", yylineno, s);
+    exit(0);
 }
 
