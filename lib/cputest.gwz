@@ -151,7 +151,7 @@ test_15:
         cmp r2, r3
         jne r5
 
-test_16: // Broken on FPGA
+test_16:
 	ldl 16, r4
         out r4, d0
 	ldl 10, r0
@@ -159,13 +159,13 @@ test_16: // Broken on FPGA
 	push r0, r15
 	inc r1
 	cmp r1, r15
-	jne r5 // assert r15++ after push.
+	jne r5
 	dec r1
 	ldm r1, r2
 	cmp r0, r2
-	jne r5 // assert r[15++] = r0 after push
+	jne r5
 
-test_17: // Broken on FPGA
+test_17:
         ldl 17, r4
         out r4, d0
         ldl 12, r0
@@ -186,7 +186,7 @@ test_18:
         cmp r2, r3
         jne r5
 
-test_19: // Broken on FPGA
+test_19:
         ldl 19, r4
         out r4, d0
         ldl scratch, r0
