@@ -42,6 +42,8 @@
 "je" { return JUMP_EQUALS; }
 "jne" { return JUMP_NOTEQUALS; }
 
+"rit" { return RETURN_INTERRUPT; }
+
 r[0-9]+ { yylval.iVal = atoi(yytext+1); return REGISTER; }
 d[0-9]+ { yylval.iVal = atoi(yytext+1); return DEVICE; }
 

@@ -21,6 +21,7 @@
 
 %token ADD SUB INC DEC MUL DIV MOD SHR SHL AND OR XOR NEG LDL MOV PUSH POP STM LDM IN OUT GETF SETF CMP
 CAL JUMP_ALWAYS JUMP_GREATER JUMP_LESS JUMP_GREATEREQUALS JUMP_LESSEQUALS JUMP_EQUALS JUMP_NOTEQUALS
+RETURN_INTERRUPT
 %token <iVal> REGISTER DEVICE INTEGER
 %token <sVal> IDENTIFIER STRING
 
@@ -73,6 +74,8 @@ instruction:
     | JUMP_LESSEQUALS REGISTER               { program.addInstruction(I_MORE, I_JMP, J_LE, $2); }
     | JUMP_EQUALS REGISTER                   { program.addInstruction(I_MORE, I_JMP, J_EQ, $2); }
     | JUMP_NOTEQUALS REGISTER                { program.addInstruction(I_MORE, I_JMP, J_NE, $2); }
+
+    | RETURN_INTERRUPT                       { program.addInstruction(I_MORE, I_MORE, I_MORE, I_RIT); }
     ;
 
 label:

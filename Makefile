@@ -1,5 +1,8 @@
 assember: Assembler.tab.cpp Assembler.tab.h lex.yy.cpp Program.cpp Location.cpp Util.cpp Program.h Location.h Util.h
+	LD_LIBRARY_PATH_SAVE=$LD_LIBRARY_PATH
+	export LD_LIBRARY_PATH=
 	clang++ -std=c++11 -stdlib=libc++ -Wno-write-strings Assembler.tab.cpp lex.yy.cpp Program.cpp Location.cpp Util.cpp -o assembler
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH_SAVE
 
 Assembler.tab.cpp: Assembler.y
 	bison -d Assembler.y

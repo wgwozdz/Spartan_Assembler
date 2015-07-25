@@ -1,0 +1,65 @@
+// Calling convention:
+// r15 is the stack pointer: must be valid and will be returned the same.
+// r14 is the base pointer: will be returned the same.
+// r13 is the return address: will be returned the same (set by the cal instruction).
+// r4-r12 are saved registers: will be returned the same.
+// r0-r3 are argument registers: may be blown away.
+// r0 is the return value.
+
+// This is test code for the timer interrupt.
+// LEDs should start at 0 and increment every second.
+// LCD char 0 is A if LEDs are even, B if LEDs are odd.
+// LED incrementing is done in an interrupt handler (Interrupts are acknowledged/handled)
+// LCD switching is done by main code loop (Interrupts return properly)
+
+interrupthandler02:
+	push r0, r15
+	push r1, r15
+	push r2, r15
+	push r3, r15
+	push r13, r15
+	getf r0
+	push r0, r15
+	
+	ldl clockhandler, r13
+	cal r13, r13
+
+	out r0, d2
+	pop r15, r0
+	setf r0
+	pop r15, r13
+	pop r15, r3
+	pop r15, r2
+	pop r15, r1
+	pop r15, r0
+	rit
+
+clockhandler:
+	ldl clock_state, r0
+	ldm r0, r1
+	inc r1
+	out r1, d0
+	stm r1, r0
+	ja r13
+	clock_state:
+		0
+main:
+	ldl 0, r0
+	setf r0
+	ldl main2, r0
+main2:
+	ldl 1, r3
+	ldl print_b, r6
+	ldl clock_state, r4
+	ldm r4, r5
+	and r5, r3, r5
+	cmp r3, r5
+	je r6
+print_a:
+	ldl 65, r2
+	out r2, d1
+	ja r0
+print_b:
+	ldl 66, r2
+	out r2, d1
+	ja r0
